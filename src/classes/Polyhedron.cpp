@@ -10,7 +10,7 @@ Polyhedron::Polyhedron(Polyhedron &&poly) noexcept {
     edges = std::move(poly.edges);
 }
 
-Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
+Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<int>> &edges) {
     this->points = points;
     this->edges = edges;
 }
@@ -61,7 +61,7 @@ std::istream &operator>>(std::istream &in, Polyhedron &poly) {
         poly = Polyhedron();
     } else {
         std::vector<Point<3>> points{};
-        std::vector<std::vector<bool>> edges{};
+        std::vector<std::vector<int>> edges{};
         /*
         Create polyhedron ticket
         */

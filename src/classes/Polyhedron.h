@@ -16,9 +16,9 @@ class Polyhedron {
 private:
     std::vector<Point<3>> points{};
 
-    std::vector<std::vector<bool>> edges{}; //-> chmod idea
+    std::vector<std::vector<int>> edges{}; //-> chmod idea
 
-    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges);
+    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<int>> &edges);
 
 public:
     Polyhedron() = default;
