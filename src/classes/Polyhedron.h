@@ -5,29 +5,23 @@
 #include <iostream>
 #include "Point.h"
 
-template<size_t T>
-class Point {
-public:
-    int x = 0, y = 0, z = 0;;
-};
-
 
 class Polyhedron {
 private:
     std::vector<Point<3>> points{};
 
-    std::vector<std::vector<int>> edges{}; //-> chmod idea
-
-    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<int>> &edges);
+    std::vector<std::vector<unsigned int>> edges{}; //-> chmod idea for < 64 vertices
 
 public:
     Polyhedron() = default;
+
+    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
 
     Polyhedron(const Polyhedron &poly);
 
     Polyhedron(Polyhedron &&poly) noexcept;
 
-    Polyhedron &operator=(const Polyhedron &poly);
+    Polyhedron &operator=(const Polyhedron &poly) = default;
 
     Polyhedron &operator=(Polyhedron &&poly) noexcept;
 

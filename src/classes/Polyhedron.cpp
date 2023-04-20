@@ -10,15 +10,17 @@ Polyhedron::Polyhedron(Polyhedron &&poly) noexcept {
     edges = std::move(poly.edges);
 }
 
-Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<int>> &edges) {
+bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges) {
+    /*
+    Create polyhedron ticket
+    */
+};
+
+Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges) {
+    if (!is_correct(points, edges))
+        throw std::logic_error("Can't create polyhedron");
     this->points = points;
     this->edges = edges;
-}
-
-Polyhedron &Polyhedron::operator=(const Polyhedron &poly) {
-    points = poly.points;
-    edges = poly.edges;
-    return *this;
 }
 
 Polyhedron &Polyhedron::operator=(Polyhedron &&poly) noexcept {
@@ -33,13 +35,13 @@ std::ostream &operator<<(std::ostream &out, const Polyhedron &poly) {
     if (poly.points.empty()) {
         out << "Empty\n";
     } else {
-        for (Point<3> p: poly.points) {
-            out << p.x << ' ' << p.y << ' ' << p.z << '\n';
+        for (const Point<3> &p: poly.points) {
+            out << p << '\n';
         }
         out << '\n';
-        for (int i = 0; i < poly.points.size(); ++i) {
+        for (size_t i = 0; i < poly.points.size(); ++i) {
             size_t k = 0;
-            for (int j = 0; j < poly.points.size(); ++j) {
+            for (size_t j = 0; j < poly.points.size(); ++j) {
                 if (k < poly.edges[i].size() and poly.edges[i][k] == j) {
                     out << '1';
                     ++k;
@@ -61,7 +63,7 @@ std::istream &operator>>(std::istream &in, Polyhedron &poly) {
         poly = Polyhedron();
     } else {
         std::vector<Point<3>> points{};
-        std::vector<std::vector<int>> edges{};
+        std::vector<std::vector<unsigned int>> edges{};
         /*
         Create polyhedron ticket
         */
