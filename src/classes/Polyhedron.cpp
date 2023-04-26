@@ -8,12 +8,12 @@ Polyhedron::Polyhedron(const Polyhedron &poly) {
 }
 
 Polyhedron::Polyhedron(Polyhedron &&poly) noexcept {
-    points = std::move(poly.points);
-    edges = std::move(poly.edges);
+points = std::move(poly.points);
+edges = std::move(poly.edges);
 }
 
 bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges) {
-    if (poins.size() == tetrahedron_size) {
+    if (points.size() == tetrahedron_size) {
         for (size_t i = 0; i < tetrahedron_size; i++)
             for (size_t j = i + 1; j < tetrahedron_size; j++)
                 for (size_t k = j + 1; k < tetrahedron_size; k++)
@@ -33,11 +33,11 @@ Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<st
 }
 
 Polyhedron &Polyhedron::operator=(Polyhedron &&poly) noexcept {
-    if (this == &poly)
-        return *this;
-    points = std::move(poly.points);
-    edges = std::move(poly.edges);
-    return *this;
+if (this == &poly)
+return *this;
+points = std::move(poly.points);
+edges = std::move(poly.edges);
+return *this;
 }
 
 std::ostream &operator<<(std::ostream &out, const Polyhedron &poly) {
@@ -68,11 +68,11 @@ std::ostream &operator<<(std::ostream &out, const Polyhedron &poly) {
 std::istream &operator>>(std::istream &in, Polyhedron &poly) {
     std::cout << "Enter tetrahedron's points:" << std::endl;
     std::vector<Point<3>> points(tetrahedron_size);
-    std::vector<std::vector<unsigned int>> edges(tetrahedron_size, std:vector<unsigned int>(tetrahedron_size, 1));
+    std::vector<std::vector<unsigned int>> edges(tetrahedron_size, std::vector<unsigned int>(tetrahedron_size, 1));
     for (int i = 0; i < tetrahedron_size; i++) {
         in >> points[i];
     }
-    poly = Polyhedron()
+    poly = Polyhedron();
     return in;
 
     /*
@@ -88,6 +88,9 @@ std::istream &operator>>(std::istream &in, Polyhedron &poly) {
         poly = Polyhedron(points, edges);
     }
      */
+
+    // input for polyhedron
+    /*
     size_t size_poly;
     std::cout << "Enter number of polyhedron's points" << std::endl;
     in >> size_poly;
@@ -108,4 +111,5 @@ std::istream &operator>>(std::istream &in, Polyhedron &poly) {
     }
     poly = Polyhedron(points, edges);
     return in;
+     */
 }

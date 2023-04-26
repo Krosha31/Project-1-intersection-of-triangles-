@@ -3,7 +3,16 @@
 
 #include <vector>
 #include <iostream>
-#include "Point.h"
+//#include "Point.h"
+
+template <size_t size>
+class Point {
+    int x; int y; int z;
+};
+
+bool is_triangle(const Point<3>& a, const Point<3>& b, const Point<3>& c) {
+    return true;
+}
 
 
 class Polyhedron {
