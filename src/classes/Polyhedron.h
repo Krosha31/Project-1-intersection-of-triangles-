@@ -29,6 +29,8 @@ public:
 
     friend std::istream &operator>>(std::istream &in, Polyhedron &poly);
 
+    friend is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
+
     ~Polyhedron() = default;
 };
 
