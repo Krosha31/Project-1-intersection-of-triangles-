@@ -17,9 +17,9 @@ bool is_triangle(const Point<3>& a, const Point<3>& b, const Point<3>& c) {
 
 class Polyhedron {
 private:
-    std::vector<Point<3>> points{};
+    std::vector<Point<3>> points_{};
 
-    std::vector<std::vector<unsigned int>> edges{}; //-> chmod idea for < 64 vertices
+    std::vector<std::vector<unsigned int>> edges_{};
 
 public:
     Polyhedron() = default;
@@ -38,7 +38,7 @@ public:
 
     friend std::istream &operator>>(std::istream &in, Polyhedron &poly);
 
-    friend is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
+    friend bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
 
     ~Polyhedron() = default;
 };
