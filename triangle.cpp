@@ -127,11 +127,11 @@ Point<point_size> lines_intersection(Point<point_size> &p1, Point<point_size> &p
         std::swap(p3, p4);
     }
     if ((p1.get_coord(0) == p2.get_coord(0)) && (p3.get_coord(0) == p4.get_coord(0))) {
-        //если они лежат на одном X
+        //ГҐГ±Г«ГЁ Г®Г­ГЁ Г«ГҐГ¦Г ГІ Г­Г  Г®Г¤Г­Г®Г¬ X
         if (p1.get_coord(0) == p3.get_coord(0)) {
-            //проверим не пересекаются ли они, т.е. есть ли у них общий Y
+            //ГЇГ°Г®ГўГҐГ°ГЁГ¬ Г­ГҐ ГЇГҐГ°ГҐГ±ГҐГЄГ ГѕГІГ±Гї Г«ГЁ Г®Г­ГЁ, ГІ.ГҐ. ГҐГ±ГІГј Г«ГЁ Гі Г­ГЁГµ Г®ГЎГ№ГЁГ© Y
             if (!((std::max(p1.get_coord(1), p2.get_coord(1)) < std::min(p3.get_coord(1), p4.get_coord(1))) || (std::min(p1.get_coord(1), p2.get_coord(1)) > std::max(p3.get_coord(1), p4.get_coord(1))))) {
-                return Point<point_size>(p1.get_coord(1), p3.get_coord(1));// додумать
+                return Point<point_size>(p1.get_coord(1), p3.get_coord(1));// Г¤Г®Г¤ГіГ¬Г ГІГј
             }
         }
        
@@ -163,7 +163,7 @@ Point<point_size> lines_intersection(Point<point_size> &p1, Point<point_size> &p
     double y = k1 * x + b1;
 
     if ((x < std::max(p1.get_coord(0), p3.get_coord(0))) || (x > std::min(p2.get_coord(0), p4.get_coord(0)))) {
-        return Point<point_size>(); //точка X находится вне пересечения проекций отрезков на ось X
+        return Point<point_size>(); //ГІГ®Г·ГЄГ  X Г­Г ГµГ®Г¤ГЁГІГ±Гї ГўГ­ГҐ ГЇГҐГ°ГҐГ±ГҐГ·ГҐГ­ГЁГї ГЇГ°Г®ГҐГЄГ¶ГЁГ© Г®ГІГ°ГҐГ§ГЄГ®Гў Г­Г  Г®Г±Гј X
     }
     Point<point_size> intersection_point(x, y);
     return intersection_point;
