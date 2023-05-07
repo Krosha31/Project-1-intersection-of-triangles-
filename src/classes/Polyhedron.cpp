@@ -1,6 +1,10 @@
 #include "Polyhedron.h"
+#include <set>
 
-const int tetrahedron_size = 4;
+#include <unordered_map>
+
+static const int tetrahedron_size = 4;
+static const double eps = 0.001;
 
 Polyhedron::Polyhedron(const Polyhedron &poly) {
     points_ = poly.points_;
@@ -8,23 +12,99 @@ Polyhedron::Polyhedron(const Polyhedron &poly) {
 }
 
 Polyhedron::Polyhedron(Polyhedron &&poly) noexcept {
-    points_ = std::move(poly.points_);
-    edges_ = std::move(poly.edges_);
+points_ = std::move(poly.points_);
+edges_ = std::move(poly.edges_);
 }
 
-bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges) {
-    if (points.size() == tetrahedron_size) {
-        for (size_t i = 0; i < tetrahedron_size; i++)
-            for (size_t j = i + 1; j < tetrahedron_size; j++)
-                for (size_t k = j + 1; k < tetrahedron_size; k++)
-                    if (!is_triangle(points[i], points[j], points[k]))
-                        return false;
-        return true;
+
+void dfs(size_t point_number, const std::vector<std::vector<bool>> &edges, std::vector<bool>& was) {
+    was[point_number] = true;
+    for (size_t i = 0; i < edges[point_number].size(); i++) {
+        if (edges[point_number][i] && !was[i]) {
+            dfs(i, edges, was);
+        }
     }
-    return false; // needed changes for point's number > 4
 }
 
-Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges) {
+bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
+    if (points.empty() || edges.size() != points.size() || edges[0].size() != points.size()) {
+        return false;
+    }
+
+    std::vector<bool> was(points.size(), false);
+    dfs(0, edges, was);
+    for (auto item: was) {
+        if (!item) {
+            return false;
+        }
+    }
+    for (size_t i = 0; i < points.size(); i++) {
+        for (size_t j = 0; j < points.size(); j++) {
+            for (size_t k = 0; k < points.size(); k++) {
+                for (size_t t = 0; t < points.size(); t++) {
+                    std::set <size_t> four_points {i, j, k, t};
+                    if (four_points.size() < 4) {
+                        continue;
+                    }
+                    std::vector <double> a (3);
+                    std::vector <double> b(3);
+                    std::vector <double> c(3);
+                    for (size_t s = 0; s < 3; s++) {
+                        a[s] = points[j].get_coord(s) - points[i].get_coord(s);
+                        b[s] = points[k].get_coord(s) - points[i].get_coord(s);
+                        c[s] = points[t].get_coord(s) - points[i].get_coord(s);
+                    }
+                    double determinant = 0;
+                    determinant += a[0] * (b[1] * c[2] - b[2] * c[1]);
+                    determinant -= a[1] * (b[0] * c[2] - b[2] * c[0]);
+                    determinant += a[2] * (b[0] * c[1] - b[1] * c[0]);
+                    if (abs(determinant) < eps) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    std::cout << 1;
+    for (size_t i = 0; i < edges.size(); i++) {
+        for (size_t j = i + 1; j < edges.size(); j++) {
+            if (!edges[i][j]) {
+                continue;
+            }
+            std::pair <unsigned int, unsigned int> third_points {-1, -1};
+            for (size_t k = 0; k < edges.size(); k++) {
+                if (k == i && k == j) {
+                    continue;
+                }
+                if (edges[i][k] && edges[j][k]) {
+                    Triangle<3> temp_triangle {points[i], points[j], points[k]};
+                    if (is_triangle(temp_triangle)) {
+                        if (third_points.first == -1) {
+                            third_points.first = k;
+                        }
+                        else if (third_points.second == -1) {
+                            third_points.second = k;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+            if (third_points.second == -1) {
+                return false;
+            }
+
+        }
+    }
+    return true;
+}
+
+Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
     if (!is_correct(points, edges))
         throw std::logic_error("Can't create polyhedron");
     this->points_ = points;
@@ -32,11 +112,11 @@ Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<st
 }
 
 Polyhedron &Polyhedron::operator=(Polyhedron &&poly) noexcept {
-    if (this == &poly)
-        return *this;
-    points_ = std::move(poly.points_);
-    edges_ = std::move(poly.edges_);
-    return *this;
+if (this == &poly)
+return *this;
+points_ = std::move(poly.points_);
+edges_ = std::move(poly.edges_);
+return *this;
 }
 
 std::ostream &operator<<(std::ostream &out, const Polyhedron &poly) {
@@ -66,20 +146,22 @@ std::ostream &operator<<(std::ostream &out, const Polyhedron &poly) {
 
 std::istream &operator>>(std::istream &in, Polyhedron &poly) {
     size_t size_poly;
-    std::cout << "Enter number of polyhedron's points" << std::endl;
+    std::cout << "Enter the number of polyhedron's points" << std::endl;
     in >> size_poly;
     std::vector<Point<3>> points(size_poly);
-    std::vector<std::vector<unsigned int>> edges(size_poly, std::vector<unsigned int>(size_poly));
+    std::vector<std::vector<bool>> edges(size_poly, std::vector<bool>(size_poly));
 
-    std::cout << "Enter polyhedron's points" << std::endl;
+    std::cout << "Enter the polyhedron's points" << std::endl;
     for (size_t i = 0; i < size_poly; i++) {
         in >> points[i];
     }
 
-    std::cout << "Enter the adjacency matrix for points";
+    std::cout << "Enter the adjacency matrix for the points";
     for (size_t i = 0; i < size_poly; i++) {
         for (size_t j = 0; j < size_poly; j++) {
-            in >> edges[i][j];
+            int temp;
+            in >> temp;
+            edges[i][j] = (temp != 0);
         }
     }
     poly = Polyhedron(points, edges);

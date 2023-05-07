@@ -3,28 +3,19 @@
 
 #include <vector>
 #include <iostream>
-//#include "Point.h"
-
-template <size_t size>
-class Point {
-    int x; int y; int z;
-};
-
-bool is_triangle(const Point<3>& a, const Point<3>& b, const Point<3>& c) {
-    return true;
-}
-
+#include "point.h"
+#include "triangle.h"
 
 class Polyhedron {
 private:
     std::vector<Point<3>> points_{};
 
-    std::vector<std::vector<unsigned int>> edges_{};
+    std::vector<std::vector<bool>> edges_{};
 
 public:
     Polyhedron() = default;
 
-    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
+    explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges);
 
     Polyhedron(const Polyhedron &poly);
 
@@ -38,7 +29,7 @@ public:
 
     friend std::istream &operator>>(std::istream &in, Polyhedron &poly);
 
-    friend bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<unsigned int>> &edges);
+    friend bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges);
 
     ~Polyhedron() = default;
 };
