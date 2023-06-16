@@ -5,4 +5,4 @@ project(Project_1_intersection_of_triangles_)
 set(CMAKE_CXX_STANDARD 20)
 
 
-add_executable(Project_1_intersection_of_triangles_ src/main.cpp src/classes/Polyhedron.h src/classes/Polyhedron.cpp)
+add_executable(Project_1_intersection_of_triangles_ src/main.cpp classes/point.h classes/point.tpp classes/triangle.h classes/triangle.tpp src/classes/Polyhedron.cpp src/classes/Polyhedron.h)

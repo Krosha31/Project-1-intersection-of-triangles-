@@ -1,4 +1,6 @@
-#pragma once
+#ifndef POINT_H
+#define POINT_H
+
 
 #include "iostream"
 #include "initializer_list"
@@ -6,8 +8,6 @@
 #include "cmath"
 
 static const double EPS = 1e-9;
-
-
 
 
 template<size_t point_dim>
@@ -38,7 +38,7 @@ public:
     bool operator<(const Point<point_dim> &other) const;
 
     template<size_t point_dim1>
-    friend std::ostream &operator<<(std::ostream &out,const Point<point_dim1> &);
+    friend std::ostream &operator<<(std::ostream &out, const Point<point_dim1> &);
 
     template<size_t point_dim1>
     friend std::istream &operator>>(std::istream &in, Point<point_dim1> &);
@@ -55,5 +55,6 @@ public:
 };
 
 
-
 #include "point.tpp"
+
+#endif
