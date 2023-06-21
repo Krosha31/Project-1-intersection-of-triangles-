@@ -18,6 +18,11 @@ Polygon<point_size>::Polygon(Polygon<point_size> &&rhs) noexcept {
 }
 
 template<size_t point_size>
+Polygon<point_size>::Polygon(const std::vector<Point<2>>& points) {
+    vertexe_ = points;
+}
+
+template<size_t point_size>
 Polygon<point_size> &Polygon<point_size>::operator=(Polygon<point_size> &&rhs) noexcept {
     if (this == &rhs) {
         return *this;
@@ -185,7 +190,11 @@ std::vector<Point<point_size>> polygon_intersection(const Polygon<point_size>& p
             out.push_back(item);
         }
     }
-    std::sort(out.begin(), out.end());
+    while (std::next_permutation(out.begin(), out.end())) {
+        if (is_polygon(Polygon<point_size>(out))) {
+            break;
+        }
+    }
     return out;
 
 

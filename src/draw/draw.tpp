@@ -80,8 +80,16 @@ Draw::Draw(const Polygon<point_size>& first, const Polygon<point_size>& second) 
     // заполняем points1_ и points2_
     points1_.setPrimitiveType(sf::Points);
     points2_.setPrimitiveType(sf::Points);
-    for (size_t i = 0; i < 3; i++) {
+//    for (size_t i = 0; i < ; i++) {
+//        points1_.append(point2vector2f(first.get_point(i)));
+//        points2_.append(point2vector2f(second.get_point(i)));
+//    }
+
+
+    for (size_t i = 0; i < first.size(); i++) {
         points1_.append(point2vector2f(first.get_point(i)));
+    }
+    for (size_t i = 0; i < second.size(); i++) {
         points2_.append(point2vector2f(second.get_point(i)));
     }
 
@@ -155,6 +163,8 @@ void Draw::intersection(const Polygon<point_size>& polygon1, \
 
     // ищем область пересечения (заполняем points3_)
     std::vector<Point<point_size>> inter_points = polygon_intersection(polygon1, polygon2);
+
+
     points3_ = vector2vertex(inter_points);
 }
 
@@ -233,9 +243,11 @@ void Draw::draw_all() {
     // масштабирование
     scale_coordinates();
 
+
     sf::ConvexShape polygon1 = shape_constructing(window_center, points1_, false);
     sf::ConvexShape polygon2 = shape_constructing(window_center, points2_, false);
     sf::ConvexShape intersection = shape_constructing(window_center, points3_, true); // область пересечения
+
 
     // Инвертирование оси y для каждого многоугольника
     polygon1.setScale(1.f, -1.f);
@@ -289,7 +301,6 @@ void Draw::draw_all() {
                 window.setView(view);
             }
         }
-
         window.clear(sf::Color::White);
         window.draw(polygon1);
         window.draw(polygon2);

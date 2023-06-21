@@ -15,6 +15,8 @@ public:
 
     Polygon(const std::initializer_list<Point<point_size>> &list);
 
+    Polygon(const std::vector<Point<2>>& points);
+
     Polygon(const Polygon<point_size> &rhs) = default;
 
     Polygon(Polygon<point_size>&& rhs) noexcept;
