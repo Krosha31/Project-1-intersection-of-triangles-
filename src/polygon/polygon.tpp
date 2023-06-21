@@ -19,6 +19,9 @@ Polygon<point_size>::Polygon(Polygon<point_size> &&rhs) noexcept {
 
 template<size_t point_size>
 Polygon<point_size>::Polygon(const std::vector<Point<2>>& points) {
+    if (points.size() <= 2) {
+        throw std::logic_error("Incorrect number of points in a polygon");
+    }
     vertexe_ = points;
 }
 
@@ -100,6 +103,9 @@ bool is_convex_polygon(const Polygon<point_size> &pl) {
 
 template<size_t point_size>
 bool is_polygon(const Polygon<point_size> &pl) {
+    if (pl.size() < 3) {
+        return false;
+    }
     size_t size = pl.vertexe_.size();
     double square_polygon = 0;
     //вычисляем по формуле Гаусса площадь многоугольника

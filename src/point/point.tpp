@@ -76,7 +76,6 @@ bool Point<point_dim>::operator==(const Point<point_dim> &other) const{
         if (fabs(coords[i] - other.coords[i]) > EPS) {
             return false;
         }
-        std::cout << std::endl;
     }
     return true;
 }
