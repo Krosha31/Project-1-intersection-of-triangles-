@@ -16,6 +16,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/triangle)
 include_directories(${PROJECT_SOURCE_DIR}/src/draw)
 
 
-add_executable(Programming main.cpp src/point/point.cpp src/triangle/triangle.cpp)
+add_executable(Programming main.cpp src/point/point.cpp src/polygon/polygon.cpp src/draw/draw.cpp)
 target_link_libraries(Intersection_of_triangles sfml-graphics)
 
