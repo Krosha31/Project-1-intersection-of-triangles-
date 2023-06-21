@@ -3,7 +3,7 @@
 #include<iostream>
 #include<initializer_list>
 #include <SFML/Graphics.hpp>
-#include "triangle.h"
+#include "polygon.h"
 
 class Draw {
 private:
@@ -28,7 +28,7 @@ public:
 	Draw(Draw&& rhs) noexcept;
 
 	template<size_t point_size>
-	Draw(const Triangle<point_size>& first, const Triangle<point_size>& second);
+	Draw(const Polygon<point_size>& first, const Polygon<point_size>& second);
 
 	template<size_t point_size>
 	Draw(const std::initializer_list<Point<point_size>> &list);	
@@ -44,8 +44,8 @@ public:
 	sf::VertexArray vector2vertex(const std::vector<Point<point_size>> &v_points);
 
 	template<size_t point_size>
-	void intersection(const Triangle<point_size>& triangle1, \
-		const Triangle<point_size>& triangle2);
+	void intersection(const Polygon<point_size>& polygon1, \
+		const Polygon<point_size>& polygon2);
 
 	void scale_coordinates();
 
