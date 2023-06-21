@@ -1,19 +1,32 @@
 #include <iostream>
-#include "src/point/point.h"
-#include "src/triangle/triangle.h"
+#include "point.h"
+#include "polygon.h"
 #include "Draw.h"
 
 
 int main() {
-    std::cout << "Please enter the points of first triangle:\n";
-    Point<2> p1, p2, p3;
-    std::cin >> p1 >> p2 >> p3;
-    Triangle<2> tr1 {p1, p2, p3};
+    std::cout << "Please enter the number of the first polygon's points\n";
+    size_t size1;
+    std::cin >> size1;
     std::cout << '\n';
-    std::cout << "Please enter the points of second triangle:\n";
-    std::cin >> p1 >> p2 >> p3;
-    Triangle<2> tr2 {p1, p2, p3};
-    std::vector<Point<2>> intersection_points = triangle_intersection(tr1, tr2);
+    std::cout << "Please enter the points of first polygon:\n";
+    std::vector <Point<2>> points1(size1);
+    for (size_t i = 0; i < size1; i++) {
+        std::cin >> points1[i];
+    }
+    Polygon<2> polygon1 {points1};
+    std::cout << '\n';
+    std::cout << "Please enter the number of the second polygon's points\n";
+    size_t size2;
+    std::cin >> size2;
+    std::cout << "Please enter the points of second polygon:\n";
+    std::vector <Point<2>> points2(size2);
+    for (size_t i = 0; i < size2; i++) {
+        std::cin >> points2[i];
+    }
+    Polygon<2> polygon2 {points2};
+    std::cout << '\n';
+    std::vector<Point<2>> intersection_points = polygon_intersection(polygon1, polygon2);
     if (intersection_points.empty()) {
         std::cout << "The triangles don't intersect";
     }
