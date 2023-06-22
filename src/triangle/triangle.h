@@ -5,12 +5,13 @@
 #include<initializer_list>
 #include<cmath>
 #include "point.h"
+#include "polygon.h"
 
 
 
 
 template<size_t point_size>
-class Triangle {
+class Triangle: public Polygon<point_size> {
 private:
     std::vector<Point<point_size>> vertexe_{};
 public:
