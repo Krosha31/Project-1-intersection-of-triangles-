@@ -4,18 +4,15 @@
 #include <vector>
 #include <iostream>
 #include "../../classes/point.h"
-#include "../../classes/triangle.h"
+#include "../polygon/polygon.h"
 
 class Polyhedron {
-//private:
-public:
+private:
     std::vector<Point<3>> points_{};
 
     std::vector<std::vector<bool>> edges_{};
 
-    [[nodiscard]] std::vector<std::pair<Triangle<3>, std::vector<size_t>>> gen_plates() const;
-//
-//public:
+public:
     Polyhedron() = default;
 
     explicit Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges);
@@ -37,6 +34,6 @@ public:
     ~Polyhedron() = default;
 };
 
-Point<3> base_intersect(const Triangle<3> &tri, const Point<3> &left, const Point<3> &right);
+std::vector<std::vector<size_t>> remove_other(std::vector<std::vector<size_t>> &vec);
 
 #endif

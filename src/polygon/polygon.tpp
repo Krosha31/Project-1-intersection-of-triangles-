@@ -1,4 +1,5 @@
 #pragma once
+
 #include "polygon.h"
 #include <algorithm>
 #include <set>
@@ -40,7 +41,7 @@ std::ostream &operator<<(std::ostream &out, const Polygon<point_size> &polygon) 
     return out;
 }
 
-template <size_t point_size>
+template<size_t point_size>
 size_t Polygon<point_size>::size() const {
     return vertexe_.size();
 }
@@ -71,19 +72,23 @@ bool is_convex_polygon(const Polygon<point_size> &pl) {
     size_t size = pl.vertexe_.size();
     // при его обходе в каждой тройке последовательных вершин происходит поворот всегда в одну и ту же сторону
     // При обходе многоугольника по часовой стрелке поворот будет всегда направо
-    for (int i = 0; i < pl.vertexe_.size(); i++){
+    for (int i = 0; i < pl.vertexe_.size(); i++) {
         // считаем координаты двух векторов
-        if (i != 0 and i != size - 1){
-            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[i - 1].get_coord(0), pl.vertexe_[i].get_coord(1) - pl.vertexe_[i - 1].get_coord(1)};
-            bc = {pl.vertexe_[i + 1].get_coord(0) - pl.vertexe_[i].get_coord(0), pl.vertexe_[i + 1].get_coord(1) - pl.vertexe_[i].get_coord(1)};
-        }
-        else if (i == 0){
-            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[size - 1].get_coord(0), pl.vertexe_[i].get_coord(1) - pl.vertexe_[size - 1].get_coord(1)};
-            bc = {pl.vertexe_[i + 1].get_coord(0) - pl.vertexe_[i].get_coord(0), pl.vertexe_[i + 1].get_coord(1) - pl.vertexe_[i].get_coord(1)};
-        }
-        else if (i == pl.vertexe_.size() - 1){
-            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[i - 1].get_coord(0), pl.vertexe_[i].get_coord(1) - pl.vertexe_[i - 1].get_coord(1)};
-            bc = {pl.vertexe_[0].get_coord(0) - pl.vertexe_[i].get_coord(0), pl.vertexe_[0].get_coord(1) - pl.vertexe_[i].get_coord(1)};
+        if (i != 0 and i != size - 1) {
+            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[i - 1].get_coord(0),
+                  pl.vertexe_[i].get_coord(1) - pl.vertexe_[i - 1].get_coord(1)};
+            bc = {pl.vertexe_[i + 1].get_coord(0) - pl.vertexe_[i].get_coord(0),
+                  pl.vertexe_[i + 1].get_coord(1) - pl.vertexe_[i].get_coord(1)};
+        } else if (i == 0) {
+            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[size - 1].get_coord(0),
+                  pl.vertexe_[i].get_coord(1) - pl.vertexe_[size - 1].get_coord(1)};
+            bc = {pl.vertexe_[i + 1].get_coord(0) - pl.vertexe_[i].get_coord(0),
+                  pl.vertexe_[i + 1].get_coord(1) - pl.vertexe_[i].get_coord(1)};
+        } else if (i == pl.vertexe_.size() - 1) {
+            ab = {pl.vertexe_[i].get_coord(0) - pl.vertexe_[i - 1].get_coord(0),
+                  pl.vertexe_[i].get_coord(1) - pl.vertexe_[i - 1].get_coord(1)};
+            bc = {pl.vertexe_[0].get_coord(0) - pl.vertexe_[i].get_coord(0),
+                  pl.vertexe_[0].get_coord(1) - pl.vertexe_[i].get_coord(1)};
         }
         // направление поворота в этой паре последовательных ребер будет задаваться знаком выражения:
         // в нашем случае отрицательное значение означает выпуклость фигуры
@@ -98,7 +103,7 @@ bool is_polygon(const Polygon<point_size> &pl) {
     size_t size = pl.vertexe_.size();
     double square_polygon = 0;
     //вычисляем по формуле Гаусса площадь многоугольника
-    for(int i=0; i < size - 1; ++i){
+    for (int i = 0; i < size - 1; ++i) {
         square_polygon += pl.vertexe_[i].get_coord(0) * pl.vertexe_[i + 1].get_coord(1);
         square_polygon -= pl.vertexe_[i + 1].get_coord(0) * pl.vertexe_[i].get_coord(1);
     }
@@ -112,7 +117,7 @@ bool is_polygon(const Polygon<point_size> &pl) {
 
 
 template<size_t point_size>
-bool point_in_polygon(const Polygon<point_size> &polygon, const Point<point_size>& point) {
+bool point_in_polygon(const Polygon<point_size> &polygon, const Point<point_size> &point) {
     if (!is_polygon(polygon)) {
         std::cout << "it isn't a polygon.\n";
         return false;
@@ -131,7 +136,8 @@ bool point_in_polygon(const Polygon<point_size> &polygon, const Point<point_size
     max_point.set_coord(1, max_point.get_coord(1) + 100);
     std::set<Point<2>> points_of_intersection;
     for (size_t i = 0; i < polygon.size(); i++) {
-        Point<2> intersection_point = lines_intersection(polygon.vertexe_[i], polygon.vertexe_[(i + 1) % polygon.size()],point, max_point);
+        Point<2> intersection_point = lines_intersection(polygon.vertexe_[i],
+                                                         polygon.vertexe_[(i + 1) % polygon.size()], point, max_point);
         if (intersection_point.is_exist()) {
             points_of_intersection.insert(intersection_point);
         }
@@ -143,8 +149,9 @@ bool point_in_polygon(const Polygon<point_size> &polygon, const Point<point_size
 }
 
 
-template <size_t point_size>
-std::vector<Point<point_size>> polygon_intersection(const Polygon<point_size>& polygon1, const Polygon<point_size>& polygon2) {
+template<size_t point_size>
+std::vector<Point<point_size>>
+polygon_intersection(const Polygon<point_size> &polygon1, const Polygon<point_size> &polygon2) {
     if (!is_polygon(polygon1)) {
         std::cout << "The first argument isn't a polygon.\n";
         return {};
@@ -187,8 +194,6 @@ std::vector<Point<point_size>> polygon_intersection(const Polygon<point_size>& p
     }
     std::sort(out.begin(), out.end());
     return out;
-
-
 
 
 }

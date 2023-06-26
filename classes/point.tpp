@@ -1,4 +1,5 @@
 #pragma once
+
 #include "point.h"
 
 template<size_t point_dim>
@@ -71,7 +72,7 @@ Point<point_dim> &Point<point_dim>::operator=(Point<point_dim> &&other) noexcept
 }
 
 template<size_t point_dim>
-bool Point<point_dim>::operator==(const Point<point_dim> &other) const{
+bool Point<point_dim>::operator==(const Point<point_dim> &other) const {
     for (size_t i = 0; i < point_dim; i++) {
         if (abs(coords[i] - other.coords[i]) > EPS) {
             return false;
@@ -81,15 +82,16 @@ bool Point<point_dim>::operator==(const Point<point_dim> &other) const{
 }
 
 template<size_t point_dim>
-bool Point<point_dim>::operator>(const Point<point_dim> &other) const{
+bool Point<point_dim>::operator>(const Point<point_dim> &other) const {
     for (size_t i = 0; i < coords.size(); i++) {
         if (abs(coords[i] - other.coords[i]) > EPS) {
             return coords[i] > other.coords[i];
         }
     }
 }
+
 template<size_t point_dim>
-bool Point<point_dim>::operator<(const Point<point_dim> &other) const{
+bool Point<point_dim>::operator<(const Point<point_dim> &other) const {
     for (size_t i = 0; i < coords.size(); i++) {
         if (abs(coords[i] - other.coords[i]) > EPS) {
             return coords[i] < other.coords[i];
@@ -128,7 +130,9 @@ std::ostream &operator<<(std::basic_ostream<char> &out, const Point<point_dim> &
 
 
 template<size_t point_size>
-Point<point_size> lines_intersection(const Point<point_size> &p1_, const Point<point_size> &p2_, const Point<point_size> &p3_, const Point<point_size> &p4_) {
+Point<point_size>
+lines_intersection(const Point<point_size> &p1_, const Point<point_size> &p2_, const Point<point_size> &p3_,
+                   const Point<point_size> &p4_) {
     Point<point_size> p1 = p1_, p2 = p2_, p3 = p3_, p4 = p4_;
     if (p1.get_coord(0) > p2.get_coord(0)) {
         std::swap(p1, p2);
@@ -158,13 +162,12 @@ Point<point_size> lines_intersection(const Point<point_size> &p1_, const Point<p
         double y = k2 * x + b2;
 
         if (p3.get_coord(0) <= x && p4.get_coord(0) >= x &&
-            std::min(p1.get_coord(1),p2.get_coord(1)) <= y && std::max(p1.get_coord(1), p2.get_coord(1)) >= y) {
+            std::min(p1.get_coord(1), p2.get_coord(1)) <= y && std::max(p1.get_coord(1), p2.get_coord(1)) >= y) {
             Point<point_size> intersection_point = {x, y};
             return intersection_point;
         }
         return Point<point_size>();
-    }
-    else {
+    } else {
         k1 = (p2.get_coord(1) - p1.get_coord(1)) / (p2.get_coord(0) - p1.get_coord(0));
     }
 
@@ -175,7 +178,7 @@ Point<point_size> lines_intersection(const Point<point_size> &p1_, const Point<p
         double y = k1 * x + b1;
 
         if (p1.get_coord(0) <= x && p2.get_coord(0) >= x &&
-            std::min(p3.get_coord(1),p4.get_coord(1)) <= y && std::max(p3.get_coord(1), p4.get_coord(1)) >= y) {
+            std::min(p3.get_coord(1), p4.get_coord(1)) <= y && std::max(p3.get_coord(1), p4.get_coord(1)) >= y) {
             Point<point_size> intersection_point = {x, y};
             return intersection_point;
         }
