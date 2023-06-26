@@ -2,10 +2,9 @@
 #include <set>
 #include <algorithm>
 
-#include <unordered_map>
-
-static const int tetrahedron_size = 4;
 static const double eps = 0.001;
+
+bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges);
 
 Polyhedron::Polyhedron(const Polyhedron &poly) {
     points_ = poly.points_;
@@ -18,8 +17,8 @@ Polyhedron::Polyhedron(Polyhedron &&poly) noexcept {
 }
 
 Polyhedron::Polyhedron(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
-//    if (!is_correct(points, edges))
-//        throw std::logic_error("Can't create polyhedron");
+    if (!is_correct(points, edges))
+        throw std::logic_error("Can't create polyhedron");
     this->points_ = points;
     this->edges_ = edges;
 }
@@ -88,102 +87,44 @@ bool check_plane(const std::vector<Point<3>> &points) {
     return true;
 }
 
-std::vector<std::vector<size_t>> remove_other(std::vector<std::vector<size_t>> &vec) {
+bool remove_other(std::vector<std::vector<size_t>> &vec, const std::vector<Point<3>> &points) {
     std::sort(vec.begin(), vec.end(), [](const std::vector<size_t> &a, const std::vector<size_t> &b) { return a.size() < b.size(); });
     for (auto &i: vec) {
         std::sort(i.begin(), i.end());
     }
     size_t cur = 0;
     while (cur < vec.size() - 1) {
-        for (int i = cur + 1; i < vec.size(); ++i) {
-
+        for (size_t i = cur + 1; i < vec.size(); ++i) {
+            bool flag = true;
+            for (size_t j = 0; j < vec[cur].size(); ++j) {
+                if (std::find(vec[i].begin(), vec[i].end(), vec[cur][j]) == vec[i].end()) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                std::erase(vec, vec[i]);
+            }
         }
         ++cur;
     }
-    return vec;
-}
-
-
-void dfs(size_t point_number, const std::vector<std::vector<bool>> &edges, std::vector<bool> &was) {
-    was[point_number] = true;
-    for (size_t i = 0; i < edges[point_number].size(); i++) {
-        if (edges[point_number][i] && !was[i]) {
-            dfs(i, edges, was);
+    for (const auto &i: vec) {
+        std::vector<Point<3>> tmp;
+        tmp.resize(i.size());
+        for (auto j: i) {
+            tmp.push_back(points[j]);
         }
+        if (!(i.size() > 3 and check_plane(tmp))) {
+            return false;
+        }
+        tmp.clear();
     }
+    return true;
 }
 
-//bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
-//    if (points.empty() or edges.size() != points.size() or edges[0].size() != points.size() or !check_plane(points)) {
-//        return false;
-//    }
-//
-//    std::vector<bool> was(points.size(), false);
-//    dfs(0, edges, was);
-//    for (auto item: was) {
-//        if (!item) {
-//            return false;
-//        }
-//    }
-//    for (size_t i = 0; i < points.size(); i++) {
-//        for (size_t j = 0; j < points.size(); j++) {
-//            for (size_t k = 0; k < points.size(); k++) {
-//                for (size_t t = 0; t < points.size(); t++) {
-//                    std::set<size_t> four_points{i, j, k, t};
-//                    if (four_points.size() < 4) {
-//                        continue;
-//                    }
-//                    std::vector<double> a(3);
-//                    std::vector<double> b(3);
-//                    std::vector<double> c(3);
-//                    for (size_t s = 0; s < 3; s++) {
-//                        a[s] = points[j].get_coord(s) - points[i].get_coord(s);
-//                        b[s] = points[k].get_coord(s) - points[i].get_coord(s);
-//                        c[s] = points[t].get_coord(s) - points[i].get_coord(s);
-//                    }
-//                    double determinant = 0;
-//                    determinant += a[0] * (b[1] * c[2] - b[2] * c[1]);
-//                    determinant -= a[1] * (b[0] * c[2] - b[2] * c[0]);
-//                    determinant += a[2] * (b[0] * c[1] - b[1] * c[0]);
-//                    if (abs(determinant) < eps) {
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    std::cout << 1;
-//    for (size_t i = 0; i < edges.size(); i++) {
-//        for (size_t j = i + 1; j < edges.size(); j++) {
-//            if (!edges[i][j]) {
-//                continue;
-//            }
-//            std::pair<unsigned int, unsigned int> third_points{-1, -1};
-//            for (size_t k = 0; k < edges.size(); k++) {
-//                if (k == i && k == j) {
-//                    continue;
-//                }
-//                if (edges[i][k] && edges[j][k]) {
-//                    Triangle<3> temp_triangle{points[i], points[j], points[k]};
-//                    if (is_triangle(temp_triangle)) {
-//                        if (third_points.first == -1) {
-//                            third_points.first = k;
-//                        } else if (third_points.second == -1) {
-//                            third_points.second = k;
-//                        } else {
-//                            return false;
-//                        }
-//                    } else {
-//                        return false;
-//                    }
-//                }
-//            }
-//            if (third_points.second == -1) {
-//                return false;
-//            }
-//
-//        }
-//    }
-//    return true;
-//}
+
+bool is_correct(const std::vector<Point<3>> &points, const std::vector<std::vector<bool>> &edges) {
+    if (points.empty() or points.size() < 4 or edges.size() != points.size() or edges[0].size() != points.size() or check_plane(points)) {
+        return false;
+    }
+    return true;
+}

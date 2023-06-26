@@ -34,6 +34,6 @@ public:
     ~Polyhedron() = default;
 };
 
-std::vector<std::vector<size_t>> remove_other(std::vector<std::vector<size_t>> &vec);
+bool remove_other(std::vector<std::vector<size_t>> &vec);
 
 #endif
